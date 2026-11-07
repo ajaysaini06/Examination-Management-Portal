@@ -1,0 +1,50 @@
+{%extends "base.html" %}
+{%from "_macros.html" import status_badge %}
+{%block title %}Dashboard{%endblock %}
+{%block content %}
+
+<h3 class="mb-3">Admin Dashboard</h3>
+<div class="row g-3 mb-4">
+    {%for label, value in stats.itmes() %}
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card text-center h-100"><div class="card-body">
+            <div class="display-6">{{value}}</div>
+            <div class="text-muted small">{{ label }}</div>
+        </div></div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <div class="card-header bg-white"><strong>Pending Examiner Requests</strong>
+        <span class="badge bg-warning text-dark">{{pending|length }}</span></div>
+    {% if pending %}
+    <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+        <thead><tr><th>Name</th><th>Email</th><th>Department</th><th>Designation</th><th>Requested</tr></thead>
+        <tbody>
+        {% for p in pending %}
+            <tr>
+                <td>{{p.name}}</td><td>{{p.email}}</td><td>{{p.department}}</td>
+                <td>{{p.designation}}</td><td>{{p.created_at}}</td>
+                <td class="text-end">
+                    <form method="post" action="{{ url_for('admin.examiner_action', user_id=p.id, action='approve')}}" class="d-inline">
+                        <input type="hidden" name="back" value="dashboard">
+                        <button class=" btn btn-sm btn-success">Approve</button>
+                    </form>
+                    <form method="post" action="{{ url_for('admin.examiner_action', user_id=p.id, action='reject')}}" class="d-inline">
+                        <input type="hidden" name="back" value="dashboard">
+                        <button class=" btn btn-sm btn-outline-danger">Reject</button>
+                    </form>
+                </td>
+            </tr> 
+        {% endfor %}     
+        </tbody>
+    </table></div>
+    {% else %}
+    <div class="card-body">
+        <p class="text-muted">No pending examiner requests.</p>
+    </div>
+    {% endif %}
+</div>
+{%endblock %}
