@@ -1,1 +1,40 @@
-{%%}
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if editing else 'Add' }} course{% endblock %}
+{% block content %}
+
+<div class="card auth-card"><div class="card-body p-4">
+    <h4 class="card-title mb-3">{{ 'Edit' if editing else 'Add' }} course</h4>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="course_code">Course Code</label>
+                <input class="form-control" id="course_code" name="course_code" value="{{ form.get('course_code', '') }}" required>
+            </div>
+            <div class="col-md-8 mb-3">
+               <label class="form-label" for="course_name">Course Name</label> 
+               <input class="form-control" id="course_name" name="course_name" value="{{ form.get('course_name', '') }}" required>  
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3">{{ form.get('description', '') }}</textarea>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="credits">Credits</label>
+                <input type="number" class="form-control" id="credits" name="credits" min="1" max="20" value="{{ form.get('credits', '') }}" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="status">Status</label>
+                <select class="form-select" id="status" name="status">
+                    {% for s in ['Active', 'Inactive'] %}
+                    <option value="{{ s }}" {{'selected' if form.get('status') == s else ''}}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-primary">Save</button>
+        <a href="{{ url_for('admin.courses') }}" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+    </div></div>
+{% endblock %}
