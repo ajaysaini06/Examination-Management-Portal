@@ -1,0 +1,10 @@
+{# Shared Jinja macros #}
+{% macro status_badge(status) %}
+    {% set colors = {
+    'Available': 'success', 'Full': 'danger', 'Cancelled': 'secondary', 'Active': 'Success', 'Pending': 'warning',
+    'Deactivated': 'secondary', 'Draft': 'secondary', 'Slot Creation': 'info', 'Booking Open': 'success',
+    'Closed': 'dark', 'Completed': 'primary', 'Booked': 'success', 'Inactive': 'secondary'
+    } %}
+
+    <span class=""badge badge-{{ colors.get(status, 'secondary') }}">{{ status }}</span>
+{% endmacro %}
