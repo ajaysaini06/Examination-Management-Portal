@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Examiners{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Examiners</h3>
+    <form method="get" class="d-flex gap-2">
+        <select name="status" class="form-select form-select-sm">
+            <option value="">All Statuses</option>
+            {% for s in ['Active', 'Pending', 'Deactivated'] %}<option value="{{ s }}" {{'selected' if status == s}}>{{ s }}</option>{% endfor %}
+        </select>
+        <button class="btn btn-sm btn-outline-primary">Filter</button>
+    </form>
+</div>
+<div class="card"><div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+        <thead><tr><th>Name</th><th>Email</th><th>Department</th><th>Designation</th><th>Exams</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for e in examiners %}
+           <tr>
+              <td>{{ e.name }}</td><td>{{ e.email }}</td><td>{{ e.department }}</td><td>{{ e.designation }}</td><td>{{ e.exam_count }}</td><td>{{ status_badge(e.status) }}</td>
+                <td class="text-end text-nowrap">
+                    {% if e.status == 'Pending' %}
+                        <form method="post" action="{{ url_for('admin.examiner_action', user_id=e.user_id, action='approve') }}" class="d-inline"><button class="btn btn-sm btn-success">Approve</button></form>
+                        <form method="post" action="{{ url_for('admin.examiner_action', user_id=e.user_id, action='reject') }}" class="d-inline"><button class="btn btn-sm btn-danger">Reject</button></form>
+                    {% elif e.status == 'Active' %}
+                        <form method="post" action="{{ url_for('admin.examiner_action', user_id=e.user_id, action='deactivate') }}" class="d-inline"><button class="btn btn-sm btn-warning">Deactivate</button></form>
+                    {% else %}
+                        <form method="post" action="{{ url_for('admin.examiner_action', user_id=e.user_id, action='approve') }}" class="d-inline"><button class="btn btn-sm btn-primary">Reactivate</button></form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="7" class="text-center text-muted">No examiners found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table></div></div>
+{% endblock %}
