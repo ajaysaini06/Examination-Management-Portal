@@ -4,5 +4,33 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Examinations</h3>
-    <a href="{{ url_for}}"
+    <a href="{{ url_for('admin.add_exam') }}" class="btn btn-primary">+ Add Examination</a>
 </div>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover mb-0 align-middle">
+    <thead><tr>
+        <th>Examination</th><th>Course</th><th>Type</th><th>Slot Creation</th><th>Booking</th>
+        <th>Status</th><th>Rubrics</th><th>Examiners</th><th></th></tr></thead>
+    <tbody>
+    {% for e in exams %}
+    <tr>
+        <td>{{ e.exam_name }}<div class="small text-muted">{{ e.duration_minutes }} min &middot; {{ e.max_marks }} marks</div></td>
+        <td>{{ e.course_code }}</td><td>{{ e.exam_type }}</td>
+        <td class="small">{{ e.slot_creation_start }}<br>to {{ e.slot_creation_end }}</td>
+        <td class="small">{{ e.booking_start }}<br>to {{ e.booking_end }}</td>
+        <td>{{ status_badge(e.status) }}{% if e.status_override %} <div class="small text_muted">manual</div>{% endif %}</td>
+        <td><a href="{{ url_for('admin.rubrics', exam_id=e.id) }}">{{ e.rubric_count }}</a></td>
+        <td><a href="{{ url_for('admin.assign', exam_id=e.id) }}">{{ e.examiner_count }}</a></td>
+        <td class="text-end text-nowrap">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.rubrics', exam_id=e.id) }}">Rubrics</a>
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.assign', exam_id=e.id) }}">Assign</a>
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.edit_exam', exam_id=e.id) }}">Edit</a>
+            <a class="btn btn-sm btn-outline-danger" href="{{ url_for('admin.delete_exam', exam_id=e.id) }}">Delete</a>
+        </td>
+    </tr>
+    {% else %}
+        <tr><td colspan="9" class="text-center text-muted py-4">No examinations yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table></div></div>
+{% endblock %}

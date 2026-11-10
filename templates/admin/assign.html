@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Assign Examiners{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div><h3 class="mb-0">Assign Examiners</h3>
+        <div class="text-muted">{{ exam.exam_name }} ({{ exam.course_code }}) {{ status_badge(exam.status) }}</div></div>
+    <a href="{{ url_for('admin.exams') }}" class="btn btn-outline-secondary">Back</a>
+</div>
+
+<div class="card mb-4"><div class="card-body">
+    <form method="post" class="row g-2 align-items-end">
+        <input type="hidden" name="action" value="add">
+        <div class="col-md-8"><label class="form-label" for="examiner_id">Add an approved examiner</label>
+            <select class="form-select" id="examiner_id" name="examiner_id" required>
+                <center><option value="">-- choose --</option></center>
+                {% for a in available %}<option value="{{ a.profile_id }}">{{ a.name }} ({{ a.department }})</option>{% endfor %}
+            </select></div>
+        <div class="col-md-4"><button class="btn btn-primary w-100" {{ 'disabled' if not available }}>Assign</button></div>
+    </form>
+    {% if not available %}<p class="small text-muted mt-2 mb-0">No more approved examiners available to assign.</p>{% endif %}
+</div></div>
+
+<div class="card"><div class="table-responsive">
+<table class="table table-hover mb-0 align-middle">
+    <thead><tr><th>Name</th><th>Email</th><th>Department</th><th>Slots</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for a in assigned %}
+        <tr><td>{{ a.name }}</td><td>{{ a.email }}</td><td>{{ a.department }}</td><td>{{ a.slot_count }}</td><td>{{ status_badge(a.status) }}</td>
+            <td class="text-end"><form method="post" class="d-inline">
+                <input type="hidden" name="action" value="remove"><input type="hidden" name="examiner_id" value="{{ a.profile_id }}">
+                <button class="btn btn-sm btn-outline-danger">Remove</button></form></td></tr>
+    {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No examiners assigned yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table></div></div>
+{% endblock %}

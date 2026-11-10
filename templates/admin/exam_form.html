@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}{{ 'Edit' if editing else 'Add' }} examination{% endblock %}
+{% block content %}
+<div class="row g-4">
+<div class="col-lg-8">
+<div class="card"><div class="card-body p-4">
+    <h4 class="card-title mb-3">{{ 'Edit' if editing else 'Add' }} Examination</h4>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="course_id">Course</label>
+                <select class="form-select" name="course_id" id="course_id" required>
+                    <option value="">---choose-</option>
+                    {% for c in courses %}
+                    <option value="{{ c.id }}" {{ 'selected' if form.get('course_id')|string == c.id|string }]>{{ c.course_code }} - {{ c.course_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="exam_name">Examinamtion</label>
+                <input class="form-control" id="exam_name" name="exam_name" value="{{ form.get('exam_name') }}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="exam_type">Type</label>
+                <select class="form-select" id="exam_type" name="exam_type" required>
+                    <option value="">---choose-</option>
+                    {% for t in exam_types %}<option value="{{ t }}" {{ 'selected' if form.get('exam_type') == t }}>{{ t }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="duration_minutes">Duration (minutes)</label>
+                <input  type="number" min="1" class="form-control" id="duration_minutes" name="duration_minutes" value="{{ form.get('duration_minutes', '') }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="max_marks">Maximum Marks</label>
+                <input type="number" min="1" class="form-control" id="max_marks" name="max_marks" value="{{ form.get('max_marks', '') }}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"><label class="form-label" for="slot_creation_start">Slot creation start</label>
+                <input type="date" class="form-control" id="slot_creation_start" name="slot_creation_start" value="{{ form.get('slot_creation_start', '') }}" required></div>
+            <div class="col-md-3 mb-3"><label class="form-label" for="slot_creation_end">Slot creation end</label>
+                <input type="date" class="form-control" id="slot_creation_end" name="slot_creation_end" value="{{ form.get('slot_creation_end', '') }}" required></div>
+            <div class="col-md-3 mb-3"><label class="form-label" for="booking_start">Booking start</label>
+                <input type="date" class="form-control" id="booking_start" name="booking_start" value="{{ form.get('booking_start', '') }}" required></div>
+            <div class="col-md-3 mb-3"><label class="form-label" for="booking_end">Booking end</label>
+                <input type="date" class="form-control" id="booking_end" name="booking_end" value="{{ form.get('booking_end', '') }}" required></div>
+        </div>
+        <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label" for="venue">Venue</label>
+        <input class="form-control" id="venue" name="venue" value="{{ form.get('venue', '') or '' }}"></div>
+      <div class="col-md-6 mb-3"><label class="form-label" for="status">Status</label>
+        <select class="form-select" id="status" name="status">
+          <option value="auto" {{ 'selected' if form.get('status', 'auto') == 'auto' }}>Automatic (from dates)</option>
+          {% for s in statuses %}<option value="{{ s }}" {{ 'selected' if form.get('status') == s }}>Manual: {{ s }}</option>{% endfor %}
+        </select></div>
+    </div>
+    <div class="mb-3"><label class="form-label" for="instructions">Instructions for students</label>
+      <textarea class="form-control" id="instructions" name="instructions" rows="3">{{ form.get('instructions', '') or '' }}</textarea></div>
+    <button class="btn btn-primary">Save</button>
+    <a href="{{ url_for('admin.exams') }}" class="btn btn-outline-secondary">Cancel</a>
+  </form>
+</div></div>
+</div>
+
+{% if editing %}
+<div class="col-lg-4">
+  <div class="card"><div class="card-body">
+    <h5 class="card-title">Quick controls</h5>
+    <p class="mb-2">Current status: {{ status_badge(exam.status) }}{% if exam.status_override %} <span class="small text-muted">(manual)</span>{% endif %}</p>
+    <p class="small text-muted">These buttons move the dates to today (or yesterday) and return the status to automatic.</p>
+    <form method="post" action="{{ url_for('admin.exam_status', exam_id=exam.id) }}" class="d-grid gap-2">
+      <button name="action" value="open_slots" class="btn btn-outline-success btn-sm">Open slot creation</button>
+      <button name="action" value="close_slots" class="btn btn-outline-danger btn-sm">Close slot creation</button>
+      <button name="action" value="open_booking" class="btn btn-outline-success btn-sm">Open student booking</button>
+      <button name="action" value="close_booking" class="btn btn-outline-danger btn-sm">Close student booking</button>
+      <button name="action" value="auto" class="btn btn-outline-secondary btn-sm">Use automatic status</button>
+    </form>
+  </div></div>
+</div>
+{% endif %}
+</div>
+{% endblock %}

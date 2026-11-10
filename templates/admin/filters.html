@@ -1,0 +1,17 @@
+{# Shared filter bar for slots and bookings: exam, examiner, date, status #}
+<form method="get" class="card card-body mb-3"><div class="row g-2 align-items-end">
+    <div class="col-md-3"><label class="form label-samll" for="exam">Examination</label>
+        <select class="form-select form-selection-sm" id="exam" name="exam"><option value="">All</option>
+            {% for e in exams %}<option value="{{ e.id }}" {{ 'selected' if f.exam == e.id|string }}>{{ e.exam_name }} ({{ e.course_code }})</option>{% endfor %}</select></div>
+    <div class="col-md-3"><label class="form-label small" for="examiner">Examiner</label>
+        <select class="form-select form-selection-sm" id="examiner" name="examiner"><option value="">All</option>
+            {% for x in examiners %}<option value="{{ x.id }}" {{ 'selected' if f.examiner == x.id|string }}>{{ x.name }}</option>{% endfor %}</select></div>
+    <div class="col-md-2"><label class="form-label small" for="date">Slot Date</label>
+        <input type="date" class="form-control form-control-sm" id="date" name="date" value="{{ f.date }}"></div>
+    <div class="col-md-2"><label class="form-label small" for="status">Status</label>
+        <select class="form-select form-select-sm" id="status" name="status"><option value="">All</option>
+            {% for s in statuses %}<option {{ 'selected' if f.status == s }}>{{ s }}</option>{% endfor %}</select></div>
+    <div class="col-md-2 d-flex gap-2"><button class="btn btn-sm btn-primary flex-fill">Filter</button>
+        <a class="btn btn-sm btn-outline-secondary" href="{{ request.path }}">Reset</a></div>
+</div></form>
+</form>
