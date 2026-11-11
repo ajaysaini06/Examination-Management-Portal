@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Bookings{% endblock %}
+{% block content %}
+<h3 class="mb-3">All Bookings</h3>
+{% include "admin/_filters.html" %}
+<div class="card"><div class="table-responsive"><table class="table table-hover mb-0 align-middle">
+    <thead><tr><th>#</th><th>Student</th><th>Examination</th><th>Date</th><th>Time</th><th>Examiner</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for b in bookings %}
+        <tr><td>{{ b.id }}</td><td>{{ b.student_name }}<span class="small text-muted">{{ b.roll_no }}</span></td>
+            <td>{{ b.exam_name }} <span class="small text-muted">({{ b.course_code }})</span></td><td>{{ b.slot_date }}</td>
+            <td>{{ b.start_time }} - {{ b.end_time }}</td><td>{{ b.examiner_name }}</td><td>{{ status_badge(b.status) }}</td>
+            <td class="text-end">{% if b.status == 'Booked' %}<a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.reschedule', booking_id=b.id) }}">Reschedule</a>{% endif %}</td></tr>
+    {% else %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No Bookings Match.</td></tr>
+    {% endfor %}
+    </tbody></table></div></div>
+{% endblock %}
