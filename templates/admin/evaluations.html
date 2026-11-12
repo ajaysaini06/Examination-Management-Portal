@@ -1,0 +1,36 @@
+ {% extends "base.html" %}
+ {% block title %}Results{% endblock %}
+ {% block content %}
+ <h3 class="mb-3">Evaluations and Publishing</h3>
+ <div class="card mb-4"><div class="table-responsive"><table class="table mb-0 align-middle">
+    <thead><tr><th>Examination</th><th>Evaluations</th><th>Published</th><th></th></tr></thead>
+    <tbody>
+    {% for e in exams %}{% if e.total %}
+        <tr><td>{{ e.exam_name }}<span class="text-muted small">({{ e.course_code }})</span></td><td>{{ e.total }}</td><td>{{ e.published }}</td>
+            <td class="text-end text-nowrap">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.evaluations', exam=e.id) }}">View</a>
+                <form method="post" action="{{ url_for('admin.exam_publish', exam_id=e.id) }}" class="d-inline">
+                    <button name="action" value="publish_all" class="btn btn-sm btn-success">Publish All</button>
+                    <button name="action" value="unpublish_all" class="btn btn-sm btn-outline-danger">Unpublish All</button></form>
+            </td></tr>
+        {% endif %}{% else %}
+            <tr><td colspan="4" class="text-center text-muted py-4">No evaluations have been submitted yet.</td></tr>
+        {% endfor %}
+        </tbody></table></div></div>
+
+{% if exam %}<p><a href="{{ url_for('admin.evalutions') }}">Show all examinations</a></p>{% endif %}
+<div class="card"><div class="table-responsive"><table class="table table-hover mb-0 align-middle">
+    <thead><tr><th>Examination</th><th>Student</th><th>Examiner</th><th>Marks</th><th>Remarks</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+        <tr><td>{{ r.exam_name }}</td><td>{{ r.student_name }} <span class="small text-muted">{{ r.roll_no }}</span></td><td>{{ r.examiner_name }}</td>
+            <td>{{ r.total_marks|round(2) }} / {{ r.max_marks }}</td><td class="small">{{ r.remarks or '' }}</td>
+            <td><span class="badge bg-{{ 'success' if r.is_published else 'warning text-dark' }}">{{ 'Published' if r.is_published else 'Not published' }}</span></td>
+            <td class="text-end"><form method="post" action="{{ url_for('admin.evaluation_publish', eval_id=r.id, action=('unpublish' if r.is_published else 'publish')) }}">
+                <input type="hidden" name="exam" value="{{ exam }}">
+                <button class="btn btn-sm btn-outline-{{ 'danger' if r.is_published else 'success' }}">{{ 'Unpublish' if r.is_published else 'Publish' }}</button></form></td></tr>
+    {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">Nothing to show</td></tr>
+    {% endfor %}
+    </tbody></table></div></div>
+{% endblock %}

@@ -1,0 +1,6 @@
+/* Small custom tweaks on top of Bootstrap */
+body { background-color: #f5f7fa; }
+.navbar-brand { font-weight: 600; letter-spacing: .3px; }
+.card { border: 0; box-shadow: 0 1px 4px rgba(0, 0, 0, .08); }
+.auth-card { max-width: 520px; margin: 2rem auto; }
+footer { font-size: .85rem; }
