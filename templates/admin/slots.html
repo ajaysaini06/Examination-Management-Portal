@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Slots{% endblock %}
+{% block content %}
+<h3 class="mb-3">All Slots</h3>
+{% include "admin/_filter.html" %}
+<div class="card"><div class="table-responsive"><table class="table table-hover mb-0 align-middle">
+    <thead><tr><th>Examination</th><th>Date</th><th>Time</th><th>Examiner</th><th>Location</th><th>Booked</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for s in slots %}
+        <tr><td>{{ s.exam_name }} <span class="small text-muted">({{ s.course_code }})</span></td><td>{{ s.slot_date }}</td>
+            <td>{{ s.start_time }} - {{ s.end_time }}</td><td>{{ s.examiner_name }}</td><td>{{ s.location or '-' }}</td>
+            <td>{{ s.capacity - s.available_seats }} / {{ s.capacity }}</td><td>{{ status_badge(s.status) }}</td>
+            <td class="text-end">{% if s.status in ['Available', 'Full'] %}<a class="btn btn-outline-primary" href="{{ url_for('admin.change_examiner', slots_id=s.id) }}">Change Examiner</a>{% endif %}</td></tr>
+    {% else %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No slots match.</td></tr>
+    {% endfor %}
+    </tbody></table></div></div>
+{% endblock %}
