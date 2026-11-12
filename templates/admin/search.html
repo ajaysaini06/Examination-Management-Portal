@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<h3 class="mb-3">Search</h3>
+<form method="get" class="d-flex gap-2 mb-4"><input class="form-control" name="q" value="{{ q }}" placeholder="Name or ID: students, examiners, examinations, bookings" autofocus>
+    <button class="btn btn-primary">Search</button></form>
+{% if q %}
+{% macro box(title, rows) %}
+<div class="card mb-3"><div class="card-header bg-white"><strong>{{ title }}</strong> <span class="badge bg-secondary">{{ rows|length }}</span></div>
+    {{ caller() }}</div>
+{% endmarco %}
+{% call box('Students', r.students) %}<ul class="list-group list-group-flush">
+    {% for s in r.students %}<li class="list-group-item">#{{ s.id }} {{ s.name }} &middot; {{ s.roll_no }} &middot; {{ s.email }} &middot; {{ s.program }}</li>{% else %}<li class="list-group-item text-muted">None</li>{% endfor %}</ul>{% endcall %}
+{% call box('Examiners', r.examiners) %}<ul class="list-group list-group-flush">
+    {% for x in r.examiners %}<li class="list-group-item">#{{ x.id }} {{ x.name }} &middot; {{ x.email }} &middot; {{ x.department }} {{ status_badge(x.status) }}</li>{% else %}<li class="list-group-item text-muted">None</li>{% endfor %}</ul>{% endcall %}
+{% call box('Examinations', r.exams) %}<ul class="list-group list-group-flush">
+    {% for e in r.exams %}<li class="list-group-items">#{{ e.id }}  {{ e.exam_name }} ({{ e.course_code }}) {{ status_badge(e.status) }}
+        <a class="ms-2 small" href="{{ url_for('admin.edit_exam', exam_id=e.id) }}">open</a></li>{% else %}<li class="list-group-item text-muted">None</li>{% endfor %}</ul>{% endcall %}
+{% call box('Booking', r.bookings) %}<ul class="list-group list-group-flush">
+    {% for b in r.bookings %}<li class="list-group-item">#{{ b.id }} {{ b.student_name }} ({{ b.roll_no }}) &middot; {{ b.exam_name }} &middot; {{ b.slot_date }} {{ b.start_time }} {{ status_badge(b.status) }}</li>{% else %}<li class="list-group-item text-muted">None</li>{% endfor %}</ul>{% endcall %}
+{% endif %}
+{% endblock %}
