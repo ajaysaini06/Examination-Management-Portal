@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Examiner Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-3">Examiner Dashboard</h3>
+<div class="row g-3 mb-4">
+  {% for label, value in stats.items() %}
+  <div class="col-6 col-lg-3"><div class="card text-center h-100"><div class="card-body">
+    <div class="display-6">{{ value }}</div><div class="text-muted small">{{ label }}</div>
+  </div></div></div>
+  {% endfor %}
+</div>
+<div class="card">
+  <div class="card-header bg-white"><strong>Assigned examinations</strong></div>
+  <div class="table-responsive"><table class="table table-hover mb-0 align-middle">
+    <thead><tr><th>Examination</th><th>Course</th><th>Slot creation window</th><th>Status</th><th>My slots</th></tr></thead>
+    <tbody>
+    {% for e in exams %}
+      <tr><td>{{ e.exam_name }}</td><td>{{ e.course_code }}</td>
+        <td class="small">{{ e.slot_creation_start }} to {{ e.slot_creation_end }}</td>
+        <td>{{ status_badge(e.status) }}</td><td>{{ e.my_slots }}</td></tr>
+    {% else %}
+      <tr><td colspan="5" class="text-center text-muted py-4">No examinations assigned to you yet.</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+</div>
+{% endblock %}
