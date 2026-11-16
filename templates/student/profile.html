@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="card auth-card"><div class="card-body p-4">
+  <h4 class="card-title mb-3">My profile</h4>
+  <form method="post">
+    <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label">Email</label><input class="form-control" value="{{ p.email }}" disabled></div>
+      <div class="col-md-6 mb-3"><label class="form-label">Roll number</label><input class="form-control" value="{{ p.roll_no }}" disabled></div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label" for="name">Name</label>
+        <input class="form-control" id="name" name="name" value="{{ form.get('name', '') }}" required></div>
+      <div class="col-md-6 mb-3"><label class="form-label" for="phone">Phone</label>
+        <input class="form-control" id="phone" name="phone" value="{{ form.get('phone', '') or '' }}"></div>
+    </div>
+    <div class="mb-3"><label class="form-label" for="program">Program</label>
+      <input class="form-control" id="program" name="program" value="{{ form.get('program', '') or '' }}" required></div>
+    <hr><p class="small text-muted">Change password (leave blank to keep the current one)</p>
+    <div class="mb-3"><label class="form-label" for="current_password">Current password</label>
+      <input type="password" class="form-control" id="current_password" name="current_password"></div>
+    <div class="row">
+      <div class="col-md-6 mb-3"><label class="form-label" for="new_password">New password</label>
+        <input type="password" class="form-control" id="new_password" name="new_password" minlength="6"></div>
+      <div class="col-md-6 mb-3"><label class="form-label" for="confirm_password">Confirm new password</label>
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password" minlength="6"></div>
+    </div>
+    <button class="btn btn-primary">Save changes</button>
+  </form>
+</div></div>
+{% endblock %}

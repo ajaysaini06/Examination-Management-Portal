@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock %}
+{% block content %}
+<h3 class="mb-3">My Results</h3>
+{% for r in results %}
+<div class="card mb-3"><div class="card-body">
+  <div class="d-flex justify-content-between flex-wrap">
+    <div><h5 class="mb-0">{{ r.ev.exam_name }}</h5><div class="text-muted small">{{ r.ev.course_code }} - {{ r.ev.course_name }} &middot; {{ r.ev.slot_date }} &middot; Examiner: {{ r.ev.examiner_name }}</div></div>
+    <div class="text-end"><div class="h3 mb-0">{{ r.ev.total_marks|round(2) }} / {{ r.ev.max_marks }}</div><div class="text-muted small">{{ r.pct }}%</div></div>
+  </div>
+  <div class="progress my-3" style="height: 8px"><div class="progress-bar" style="width: {{ [r.pct, 100]|min }}%"></div></div>
+  <table class="table table-sm mb-3">
+    <thead><tr><th>Criterion</th><th class="text-end">Marks</th><th class="text-end">Out of</th></tr></thead>
+    <tbody>{% for s in r.scores %}<tr><td>{{ s.criterion_name }}</td><td class="text-end">{{ s.marks_awarded|round(2) }}</td><td class="text-end">{{ '%g' % s.max_marks }}</td></tr>{% endfor %}</tbody>
+  </table>
+  <div><strong>Examiner remarks:</strong> {{ r.ev.remarks or 'No remarks.' }}</div>
+</div></div>
+{% else %}
+<div class="alert alert-info">No results have been published for you yet.</div>
+{% endfor %}
+{% endblock %}

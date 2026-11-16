@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Examinations{% endblock %}
+{% block content %}
+<h3 class="mb-3">Examinations</h3>
+<form method="get" class="card card-body mb-3"><div class="row g-2 align-items-end">
+  <div class="col-md-3"><label class="form-label small" for="q">Search name or code</label>
+    <input class="form-control" id="q" name="q" value="{{ q }}"></div>
+  <div class="col-md-3"><label class="form-label small" for="course">Course</label>
+    <select class="form-select" id="course" name="course"><option value="">All</option>
+      {% for c in courses %}<option value="{{ c.id }}" {{ 'selected' if course == c.id|string }}>{{ c.course_code }} - {{ c.course_name }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><label class="form-label small" for="type">Type</label>
+    <select class="form-select" id="type" name="type"><option value="">All</option>
+      {% for t in types %}<option {{ 'selected' if etype == t }}>{{ t }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><label class="form-label small" for="status">Status</label>
+    <select class="form-select" id="status" name="status"><option value="">All</option>
+      {% for s in statuses %}<option {{ 'selected' if status == s }}>{{ s }}</option>{% endfor %}</select></div>
+  <div class="col-md-2 d-flex gap-2"><button class="btn btn-primary flex-fill">Filter</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('student.exams') }}">Reset</a></div>
+</div></form>
+<div class="row g-3">
+  {% for e in exams %}
+  <div class="col-md-6 col-lg-4"><div class="card h-100"><div class="card-body d-flex flex-column">
+    <div class="d-flex justify-content-between"><h5 class="card-title">{{ e.exam_name }}</h5>{{ status_badge(e.status) }}</div>
+    <h6 class="text-muted">{{ e.course_code }} - {{ e.course_name }}</h6>
+    <p class="small mb-2">{{ e.exam_type }} &middot; {{ e.duration_minutes }} min &middot; {{ e.max_marks }} marks<br>
+      Booking: {{ e.booking_start }} to {{ e.booking_end }}{% if e.venue %}<br>Venue: {{ e.venue }}{% endif %}</p>
+    {% if e.instructions %}<p class="small text-muted">{{ e.instructions }}</p>{% endif %}
+    <div class="mt-auto">
+      {% if e.my_booking %}<span class="badge bg-success me-1">You have a booking</span>{% endif %}
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('student.exam_slots', exam_id=e.id) }}">View slots</a>
+    </div>
+  </div></div></div>
+  {% else %}
+  <div class="col-12"><div class="alert alert-info">No examinations match your search.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

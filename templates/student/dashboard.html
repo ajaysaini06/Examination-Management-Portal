@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-3">Student Dashboard</h3>
+<div class="row g-3 mb-4">
+  {% for label, value in stats.items() %}
+  <div class="col-6 col-md-4 col-lg"><div class="card text-center h-100"><div class="card-body">
+    <div class="display-6">{{ value }}</div><div class="text-muted small">{{ label }}</div>
+  </div></div></div>
+  {% endfor %}
+</div>
+<div class="card">
+  <div class="card-header bg-white d-flex justify-content-between"><strong>Upcoming examinations</strong>
+    <a href="{{ url_for('student.exams') }}">Browse examinations</a></div>
+  <div class="table-responsive"><table class="table mb-0 align-middle">
+    <thead><tr><th>Examination</th><th>Date</th><th>Time</th><th>Location</th></tr></thead>
+    <tbody>
+    {% for u in upcoming %}
+      <tr><td>{{ u.exam_name }} <span class="text-muted small">({{ u.course_code }})</span></td>
+        <td>{{ u.slot_date }}</td><td>{{ u.start_time }} - {{ u.end_time }}</td><td>{{ u.location or '-' }}</td></tr>
+    {% else %}
+      <tr><td colspan="4" class="text-center text-muted py-4">You have no upcoming examinations.</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+</div>
+{% endblock %}
