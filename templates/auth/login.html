@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="card auth-card">
+  <div class="card-body p-4">
+    <h4 class="card-title mb-3">Login</h4>
+    <form method="post">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ email }}" required autofocus>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+    <hr>
+    <p class="mb-1 small">New student? <a href="{{ url_for('auth.register_student') }}">Register here</a></p>
+    <p class="mb-0 small">Examiner? <a href="{{ url_for('auth.register_examiner') }}">Request an account</a></p>
+  </div>
+</div>
+{% endblock %}

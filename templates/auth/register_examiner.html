@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Examiner Registration{% endblock %}
+{% block content %}
+<div class="card auth-card">
+  <div class="card-body p-4">
+    <h4 class="card-title mb-1">Examiner Registration</h4>
+    <p class="text-muted small">Your account will be active after admin approval.</p>
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label" for="name">Full name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ form.get('name', '') }}" required>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label" for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" value="{{ form.get('email', '') }}" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label" for="phone">Phone</label>
+          <input type="tel" class="form-control" id="phone" name="phone" value="{{ form.get('phone', '') }}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label" for="department">Department</label>
+          <input type="text" class="form-control" id="department" name="department" value="{{ form.get('department', '') }}" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label" for="designation">Designation</label>
+          <input type="text" class="form-control" id="designation" name="designation" value="{{ form.get('designation', '') }}" required>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="contact_details">Contact details (office, extension, etc.)</label>
+        <input type="text" class="form-control" id="contact_details" name="contact_details" value="{{ form.get('contact_details', '') }}">
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password" minlength="6" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label" for="confirm_password">Confirm password</label>
+          <input type="password" class="form-control" id="confirm_password" name="confirm_password" minlength="6" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Submit for approval</button>
+    </form>
+    <p class="mt-3 mb-0 small">Already approved? <a href="{{ url_for('auth.login') }}">Login</a></p>
+  </div>
+</div>
+{% endblock %}
