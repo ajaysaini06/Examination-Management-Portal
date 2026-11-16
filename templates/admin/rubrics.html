@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Rubrics{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div><h3 class="mb-0">Rubrics</h3>
+    <div class="text-muted">{{ exam.exam_name }} ({{ exam.course_code }}) &middot; maximum {{ exam.max_marks }} marks</div></div>
+  <div><a href="{{ url_for('admin.exams') }}" class="btn btn-outline-secondary">Back</a>
+    <a href="{{ url_for('admin.add_rubric', exam_id=exam.id) }}" class="btn btn-primary">+ Add criterion</a></div>
+</div>
+{% if mismatch %}
+<div class="alert alert-warning">Warning: criteria marks add up to <strong>{{ total|round(2) }}</strong>, but the examination maximum is <strong>{{ exam.max_marks }}</strong>.</div>
+{% endif %}
+<div class="card"><div class="table-responsive">
+<table class="table table-hover mb-0 align-middle">
+  <thead><tr><th>Criterion</th><th>Max marks</th><th>Weightage %</th><th>Description</th><th></th></tr></thead>
+  <tbody>
+  {% for r in rubrics %}
+    <tr>
+      <td>{{ r.criterion_name }}</td><td>{{ r.max_marks|round(2) }}</td>
+      <td>{{ r.weightage if r.weightage is not none else '-' }}</td><td>{{ r.description or '' }}</td>
+      <td class="text-end text-nowrap">
+        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.edit_rubric', exam_id=exam.id, rubric_id=r.id) }}">Edit</a>
+        <a class="btn btn-sm btn-outline-danger" href="{{ url_for('admin.delete_rubric', exam_id=exam.id, rubric_id=r.id) }}">Delete</a>
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5" class="text-center text-muted py-4">No criteria yet.</td></tr>
+  {% endfor %}
+  </tbody>
+  {% if rubrics %}<tfoot><tr class="fw-bold"><td>Total</td><td>{{ total|round(2) }}</td><td colspan="3"></td></tr></tfoot>{% endif %}
+</table></div></div>
+{% endblock %}
