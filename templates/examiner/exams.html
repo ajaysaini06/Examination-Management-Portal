@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}My Examinations{% endblock %}
+{% block content %}
+<h3 class="mb-3">My Examinations</h3>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover mb-0 align-middle">
+  <thead><tr><th>Examination</th><th>Type</th><th>Duration</th><th>Slot creation</th><th>Booking</th><th>Status</th><th>My slots</th><th></th></tr></thead>
+  <tbody>
+  {% for e in exams %}
+    <tr><td>{{ e.exam_name }}<div class="small text-muted">{{ e.course_code }} - {{ e.course_name }}</div></td>
+      <td>{{ e.exam_type }}</td><td>{{ e.duration_minutes }} min</td>
+      <td class="small">{{ e.slot_creation_start }}<br>to {{ e.slot_creation_end }}</td>
+      <td class="small">{{ e.booking_start }}<br>to {{ e.booking_end }}</td>
+      <td>{{ status_badge(e.status) }}</td><td>{{ e.my_slots }}</td>
+      <td class="text-end">
+        {% if e.can_create %}<a class="btn btn-sm btn-primary" href="{{ url_for('examiner.new_slot', exam_id=e.id) }}">Create slot</a>
+        {% else %}<span class="small text-muted">Creation closed</span>{% endif %}
+      </td></tr>
+  {% else %}
+    <tr><td colspan="8" class="text-center text-muted py-4">No examinations assigned to you yet.</td></tr>
+  {% endfor %}
+  </tbody></table></div></div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}My Slots{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">My Slots</h3>
+  <a href="{{ url_for('examiner.new_slot') }}" class="btn btn-primary">+ New slot</a>
+</div>
+<div class="card"><div class="table-responsive">
+<table class="table table-hover mb-0 align-middle">
+  <thead><tr><th>Examination</th><th>Date</th><th>Time</th><th>Location</th><th>Booked / Capacity</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for s in slots %}
+    <tr><td>{{ s.exam_name }}<div class="small text-muted">{{ s.course_code }}</div></td>
+      <td>{{ s.slot_date }}</td><td>{{ s.start_time }} - {{ s.end_time }}</td><td>{{ s.location or '-' }}</td>
+      <td>{{ s.capacity - s.available_seats }} / {{ s.capacity }}</td><td>{{ status_badge(s.status) }}</td>
+      <td class="text-end text-nowrap">
+        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('examiner.slot_students', slot_id=s.id) }}">Students</a>
+        {% if s.editable %}
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('examiner.edit_slot', slot_id=s.id) }}">Edit</a>
+          <a class="btn btn-sm btn-outline-danger" href="{{ url_for('examiner.delete_slot', slot_id=s.id) }}">Delete</a>
+        {% endif %}
+      </td></tr>
+  {% else %}
+    <tr><td colspan="7" class="text-center text-muted py-4">You have not created any slots yet.</td></tr>
+  {% endfor %}
+  </tbody></table></div></div>
+<p class="small text-muted mt-2">Slots can be edited or deleted only before booking starts and only while they have no bookings.</p>
+{% endblock %}
