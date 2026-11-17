@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     email         TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     role          TEXT NOT NULL CHECK (role IN ('admin', 'examiner', 'student')),
-    phone         INTEGER NOT NULL,
+    phone         TEXT,
     status        TEXT NOT NULL DEFAULT 'Active'
                   CHECK (status IN ('Active', 'Pending', 'Deactivated')),
     created_at    TEXT NOT NULL DEFAULT (datetime('now'))
